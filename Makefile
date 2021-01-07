@@ -1,13 +1,17 @@
-# the compiler: gcc for C program
+# Setting the compiler: gcc for C program
 CC = gcc
 
-# compiler flags:
+# Setting compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 CFLAGS  = -g -Wall
 
+# Create main object file
+main.o:
+	$(CC) $(CFLAGS) src/main.c
+
 program: src/main.c
-	$(CC) $(CFLAGS) -o program src/main.c
+	$(CC) main.o -o zipper
 
 clean: 
-	$(RM) program
+	$(RM) zipper
