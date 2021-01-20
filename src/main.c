@@ -2,13 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_usage() {
-    printf("Usage:\n");
-    printf(" -i <path>\n");
-    printf(" -o <path>\n");
-    printf(" -b\n");
-    printf(" -d\n");
-
+void error_on_improper_use() {
+    fprintf(stderr, "ERROR: Failed to parse command line arguments. See README.md for command line input troubleshooting.");
     exit(8);
 }
 
@@ -24,31 +19,36 @@ int main(int argc, char* argv[]) {
     while (i < argc) {
         if (argv[i][0] == '-') {
             switch (argv[i][1]) {
+
                 case 'i':
                     input_path = argv[i+1];
-                    printf(input_path);
+                    fprintf(stdout, "INFO: Path to input file: %s\n", input_path);
                     i += 2;
-                    break; 
+                    break;
+
                 case 'o':
                     output_path = argv[i+1];
-                    printf(output_path);
+                    fprintf(stdout, "INFO: Path to output file: %s\n", output_path);
                     i += 2;
                     break;
+
                 case 'b':
                     binary_mode = true;
-                    printf("Binary");
+                    fprintf(stdout, "INFO: Binary mode enabled\n");
                     ++i;
                     break;
+
                 case 'd':
                     decompression_mode = true;
-                    printf("Decompresion");
+                    fprintf(stdout, "INFO: Decompression mode enabled\n");
                     ++i;
                     break;
+                    
                 default:
-                    print_usage();
+                    error_on_improper_use();
             }
         } else {
-             print_usage();
+             error_on_improper_use();
         }
     }
 
