@@ -9,13 +9,7 @@
 #define CHUNK 1024
 
 /** Read text file from a given path and save it to the memory */
-char* read_text(char* input_path) {
-
-    char *input_buf = malloc(CHUNK);
-    if (input_buf == NULL) {
-        fprintf(stderr, "ERROR: while allocating memory");
-        exit(1);
-    }
+size_t read_text(char *input_path, char *input_buf) {
 
     size_t nread;
 
@@ -26,33 +20,61 @@ char* read_text(char* input_path) {
         exit(1);
     }
 
-    while ((nread = fread(input_buf, 1, CHUNK, file)) > 0) {
-        //fwrite(input_buf, 1, nread, stdout);
-    }
-
+    nread = fread(input_buf, 1, CHUNK, file);
     fclose(file);
 
-    return input_buf;
+    return nread;
+}
+
+/** Save modified text to file in a given path */
+void save_text(char *output_path, char *output_buf, size_t nread) {
+
+    FILE *file = fopen(output_path, "w");
+
+    if (file == NULL) {
+        fprintf(stderr, "Error: while trying to open %s for writing\n", output_path);
+        exit(1);
+    }
+
+    fwrite(output_buf, 1, nread, file);
+
+    fclose(file);
 }
 
 int main(int argc, char* argv[]) {
 
-    char *output_buf = malloc(CHUNK);
+    char *input_buf = malloc(CHUNK);
+    if (input_buf == NULL) {
+        fprintf(stderr, "ERROR: while allocating memory");
+        exit(1);
+    }
 
-    char* test_buffer = malloc(CHUNK);
+    char *output_buf = malloc(CHUNK);
+    if (output_buf == NULL) {
+        fprintf(stderr, "ERROR: while allocating memory");
+        exit(1);
+    }
 
     RunMode run_mode = parse_command_line_args(argc, argv);
-    char *text_chunk = read_text(run_mode.input_path);
-    length_encoding(text_chunk, output_buf);
-    fprintf(stdout, "%s", output_buf);
+    size_t nread = read_text(run_mode.input_path, input_buf);
 
+    if (run_mode.binary_mode) {
+        if (run_mode.decompression_mode) {
+            fprintf(stdout, "TODO");
+        } else {
+            binary_encoding(input_buf, output_buf);
+        }
+    } else {
+        if (run_mode.decompression_mode) {
+            length_decoding(input_buf, output_buf);
+        } else {
+            length_encoding(input_buf, output_buf);
+        }
+    }
 
-    fprintf(stdout, "\nDECODING:\n");
-    length_decoding(output_buf, test_buffer);
-    fprintf(stdout, "%s", test_buffer);
+    save_text(run_mode.output_path, output_buf, nread);
 
-    free(test_buffer);
-    free(text_chunk);
+    free(input_buf);
     free(output_buf);
     return 0;
 }

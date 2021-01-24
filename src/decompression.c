@@ -14,6 +14,8 @@ int length_decoding(char *text_chunk, char *output_buf) {
                 count--;
                 write_indx++;
             }
+            
+            i++;
         }
     }
 
