@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "utils.c"
 
 int length_encoding(char *text_chunk, char *output_buf) {
 
@@ -16,7 +15,7 @@ int length_encoding(char *text_chunk, char *output_buf) {
         write_indx += sprintf(&output_buf[write_indx], "%d%c", count, text_chunk[i]);
     }
     
-    output_buf[write_indx] = '\0';
+    output_buf[write_indx + 1] = '\0';
     return 0;
 } 
 

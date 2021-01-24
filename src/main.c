@@ -32,11 +32,11 @@ void save_text(char *output_path, char *output_buf, size_t nread) {
     FILE *file = fopen(output_path, "w");
 
     if (file == NULL) {
-        fprintf(stderr, "Error: while trying to open %s for writing\n", output_path);
+        fprintf(stderr, "ERROR: while trying to open %s for writing\n", output_path);
         exit(1);
     }
 
-    fwrite(output_buf, 1, nread, stdout);
+    fwrite(output_buf, 1, nread, file);
 
     fclose(file);
 }
