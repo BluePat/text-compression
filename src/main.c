@@ -36,12 +36,14 @@ void save_text(char *output_path, char *output_buf, size_t nread) {
         exit(1);
     }
 
-    fwrite(output_buf, 1, nread, file);
+    fwrite(output_buf, 1, nread, stdout);
 
     fclose(file);
 }
 
 int main(int argc, char* argv[]) {
+
+    RunMode run_mode = parse_command_line_args(argc, argv);
 
     char *input_buf = malloc(CHUNK);
     if (input_buf == NULL) {
@@ -55,12 +57,11 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    RunMode run_mode = parse_command_line_args(argc, argv);
     size_t nread = read_text(run_mode.input_path, input_buf);
 
     if (run_mode.binary_mode) {
         if (run_mode.decompression_mode) {
-            fprintf(stdout, "TODO");
+            binary_decoding(input_buf, output_buf);
         } else {
             binary_encoding(input_buf, output_buf);
         }
