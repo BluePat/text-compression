@@ -10,9 +10,12 @@ CFLAGS  = -g -Wall -pedantic-errors
 main.o:
 	$(CC) $(CFLAGS) src/main.c
 
+command_line_args.o:
+	$(CC) $(CFLAGS) src/command_line_args.c
+
 program:
-	$(CC) main.o logger.o -o zipper
+	$(CC) main.o command_line_args.o -o zipper
 
 clean: 
 	@echo "Cleaning up..."
-	$(RM) zipper
+	# $(RM) zipper
